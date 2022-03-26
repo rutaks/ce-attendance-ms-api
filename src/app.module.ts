@@ -11,6 +11,9 @@ import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 import { AuditInterceptor } from './shared/interceptors/audit.interceptor';
 import { ClassTransformInterceptor } from './shared/interceptors/class-transform.interceptor';
 import { ResponseTransformInterceptor } from './shared/interceptors/response-transform.interceptor';
+import { UserService } from './services/user.service';
+import { User } from './entities/user.entity';
+import { UserController } from './controllers/user.controller';
 
 @Module({
   imports: [
@@ -22,8 +25,9 @@ import { ResponseTransformInterceptor } from './shared/interceptors/response-tra
       imports: [ConfigModule],
       useClass: TypeOrmFactoryConfigService,
     }),
+    TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AppController],
+  controllers: [AppController, UserController],
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: HttpExceptionFilter },
@@ -31,6 +35,7 @@ import { ResponseTransformInterceptor } from './shared/interceptors/response-tra
     { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ResponseTransformInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ClassTransformInterceptor },
+    UserService,
   ],
 })
 export class AppModule {}
