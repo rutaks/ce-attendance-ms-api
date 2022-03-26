@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "format": "prettier --write \"src /**/*.ts\" \"test /**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "yarn typeorm:run && nest start",
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
     "start:dev": "set NODE_ENV=development && yarn typeorm:run && nest start --watch",
@@ -55,8 +55,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7",
     "swagger-ui-express": "^4.3.0",
-    "typeorm": "^0.2.41",
-    "typeorm-seeding": "^1.6.1"
+    "typeorm": "^0.2.41"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",
