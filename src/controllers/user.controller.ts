@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UsePipes,
   ValidationPipe,
@@ -21,7 +23,7 @@ import { getGenericResponseSchema } from '../shared/util/swagger.util';
 
 @ApiTags('Users')
 @UsePipes(new ValidationPipe({ transform: true }))
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -33,10 +35,23 @@ export class UserController {
   })
   @ApiBadRequestResponse({})
   @ApiExtraModels(User)
-  async createBanner(
-    @Body() dto: CreateUserDto,
-  ): Promise<GenericResponse<User>> {
+  async createUser(@Body() dto: CreateUserDto): Promise<GenericResponse<User>> {
     const results = await this.userService.create(dto);
     return { message: 'User created', results };
+  }
+
+  @Get(':slug')
+  @HttpCode(HttpStatus.OK)
+  @ApiCreatedResponse({
+    description: 'User Found',
+    ...getGenericResponseSchema(User),
+  })
+  @ApiBadRequestResponse({})
+  @ApiExtraModels(User)
+  async findUserBySlug(
+    @Param('slug') slug: string,
+  ): Promise<GenericResponse<User>> {
+    const results = await this.userService.findOneBySlug(slug);
+    return { message: 'User found', results };
   }
 }

@@ -17,6 +17,10 @@ export class UserService {
     return await this.userRepo.save({ ...new User(), ...userDto, slug });
   }
   //   modify() {}
-  //   findOne() {}
-  //   findMany() {}
+
+  async findOneBySlug(slug: string) {
+    return await this.userRepo.findOne({ where: { slug } });
+  }
+
+  // findMany() {}
 }
