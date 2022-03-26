@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "yarn typeorm:run && nest start",
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
-    "start:dev": "set NODE_ENV=development && yarn typeorm:run && nest start --watch",
+    "start:dev": "set NODE_ENV=development && nest start --watch",
     "start:debug": "set NODE_ENV=development && nest start --debug --watch",
     "start:prod": "set NODE_ENV=production && node dist/main",
     "start:stg": "set NODE_ENV=staging && node dist/src/main",

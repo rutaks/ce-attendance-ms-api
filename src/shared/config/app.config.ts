@@ -1,9 +1,8 @@
 import { INestApplication, UnauthorizedException } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import AppConfig from '../interface/app-config.interface';
-import typeormConfig from './typeorm.config';
+import typeOrmConfig from './typeorm.config';
 
 export const commonConfig = (): AppConfig => ({
   port: parseInt(process.env.PORT),
@@ -17,8 +16,7 @@ export const commonConfig = (): AppConfig => ({
 
 export const runtimeConfig = (): AppConfig => ({
   allowedOrigins: process.env.ALLOWED_ORIGINS.split(','),
-  database:
-    process.env.NODE_ENV == 'test' ? getTestingTypeOrmConfig : typeormConfig,
+  database: typeOrmConfig,
   ...commonConfig(),
 });
 
@@ -76,20 +74,3 @@ export function corsConfig(): CorsOptions {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   };
 }
-
-const getTestingTypeOrmConfig: TypeOrmModuleOptions = {
-  host: process.env.TEST_DB_HOST,
-  port: parseInt(process.env.TEST_DB_PORT),
-  username: process.env.TEST_DB_USER,
-  password: process.env.TEST_DB_PASSWORD,
-  database: process.env.TEST_DB_NAME,
-  type: 'postgres',
-  entities: [
-    __dirname + '/../**/*.entity.js',
-    __dirname + '/../**/*.entity.ts',
-  ],
-  synchronize: true,
-  logging: false,
-  autoLoadEntities: true,
-  keepConnectionAlive: true,
-};

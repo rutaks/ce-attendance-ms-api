@@ -2,22 +2,23 @@ import 'dotenv/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isRunningInProduction } from '../util/env.util';
 
-const typeormConfig: TypeOrmModuleOptions = {
-  host: process.env.POSTGRES_HOST,
-  port: parseInt(process.env.POSTGRES_PORT),
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
+const typeOrmConfig: TypeOrmModuleOptions = {
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   type: 'postgres',
-  synchronize: !isRunningInProduction(),
   keepConnectionAlive: true,
+  synchronize: !isRunningInProduction(),
   dropSchema: !isRunningInProduction(),
   logging: !isRunningInProduction(),
-  entities: ['dist/**/*.entity.js'],
-  autoLoadEntities: true,
+  autoLoadEntities: !isRunningInProduction(),
   migrationsTableName: 'migrations',
-  migrations: ['dist/migrations/*{.ts,.js}'],
-  cli: { migrationsDir: 'src/migrations' },
+  migrations: ['dist/src/migrations/*{.ts,.js}'],
+  cli: {
+    migrationsDir: 'src/migrations',
+  },
 };
 
-export default typeormConfig;
+export default typeOrmConfig;
