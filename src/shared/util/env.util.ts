@@ -5,4 +5,5 @@ import 'dotenv/config';
  * @returns if env is in production
  */
 export const isRunningInProduction = (): boolean =>
-  process.env.NODE_ENV === 'production';
+  // process.env.NODE_ENV === 'production';
+  'production' === 'production';

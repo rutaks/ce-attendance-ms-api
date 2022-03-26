@@ -1,21 +1,20 @@
-import { INestApplication, UnauthorizedException } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import AppConfig from '../interface/app-config.interface';
 import typeOrmConfig from './typeorm.config';
 
 export const commonConfig = (): AppConfig => ({
-  port: parseInt(process.env.PORT),
-  env: process.env.NODE_ENV,
+  port: 5000,
+  env: 'development',
   jwt: {
-    privateKey: process.env.JWT_PRIVATE_KEY.trim(),
-    publicKey: process.env.JWT_PUBLIC_KEY.trim(),
-    expiresIn: parseInt(process.env.JWT_EXPIRES_IN),
+    privateKey: 'testing',
+    publicKey: 'testing',
+    expiresIn: '1h',
   },
 });
 
 export const runtimeConfig = (): AppConfig => ({
-  allowedOrigins: process.env.ALLOWED_ORIGINS.split(','),
   database: typeOrmConfig,
   ...commonConfig(),
 });
@@ -55,22 +54,22 @@ export function corsConfig(): CorsOptions {
     allowedHeaders:
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, Set-Cookie, Cookies',
     credentials: true,
-    origin: (origin, callback) => {
-      const appConfigs = runtimeConfig();
-      const whitelist = appConfigs.allowedOrigins || [];
-      const canAllowUndefinedOrigin =
-        origin === undefined && appConfigs.env !== 'production';
+    // origin: (origin, callback) => {
+    //   const appConfigs = runtimeConfig();
+    //   const whitelist = appConfigs.allowedOrigins || [];
+    //   const canAllowUndefinedOrigin =
+    //     origin === undefined && appConfigs.env !== 'production';
 
-      if (whitelist.indexOf(origin) !== -1 || canAllowUndefinedOrigin) {
-        callback(null, true);
-      } else {
-        callback(
-          new UnauthorizedException(
-            `Not allowed by CORS for origin:${origin} on ${appConfigs.env}`,
-          ),
-        );
-      }
-    },
+    //   if (whitelist.indexOf(origin) !== -1 || canAllowUndefinedOrigin) {
+    //     callback(null, true);
+    //   } else {
+    //     callback(
+    //       new UnauthorizedException(
+    //         `Not allowed by CORS for origin:${origin} on ${appConfigs.env}`,
+    //       ),
+    //     );
+    //   }
+    // },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   };
 }
