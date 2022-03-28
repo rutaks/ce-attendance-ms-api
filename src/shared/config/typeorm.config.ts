@@ -3,11 +3,11 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isRunningInProduction } from '../util/env.util';
 
 const typeOrmConfig: TypeOrmModuleOptions = {
-  host: 'localhost',
-  port: 5430,
-  username: 'cerw',
-  password: '123',
-  database: 'ce_attendance_ms_db',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   type: 'postgres',
   keepConnectionAlive: true,
   entities: ['dist/**/*.entity.js'],

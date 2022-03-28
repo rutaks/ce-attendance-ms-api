@@ -5,16 +5,17 @@ import AppConfig from '../interface/app-config.interface';
 import typeOrmConfig from './typeorm.config';
 
 export const commonConfig = (): AppConfig => ({
-  port: 5000,
-  env: 'development',
+  port: parseInt(process.env.PORT),
+  env: process.env.NODE_ENV,
   jwt: {
-    privateKey: 'testing',
-    publicKey: 'testing',
-    expiresIn: '1h',
+    privateKey: process.env.JWT_PRIVATE_KEY.trim(),
+    publicKey: process.env.JWT_PUBLIC_KEY.trim(),
+    expiresIn: parseInt(process.env.JWT_EXPIRES_IN),
   },
 });
 
 export const runtimeConfig = (): AppConfig => ({
+  allowedOrigins: process.env.ALLOWED_ORIGINS.split(','),
   database: typeOrmConfig,
   ...commonConfig(),
 });

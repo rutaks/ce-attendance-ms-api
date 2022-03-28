@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TerminusModule } from '@nestjs/terminus';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { runtimeConfig } from './shared/config/app.config';
@@ -14,9 +15,13 @@ import { ResponseTransformInterceptor } from './shared/interceptors/response-tra
 import { UserService } from './services/user.service';
 import { User } from './entities/user.entity';
 import { UserController } from './controllers/user.controller';
+import { HealthController } from './controllers/health.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
+    TerminusModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [runtimeConfig],
@@ -27,7 +32,7 @@ import { UserController } from './controllers/user.controller';
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AppController, UserController],
+  controllers: [AppController, UserController, HealthController],
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: HttpExceptionFilter },

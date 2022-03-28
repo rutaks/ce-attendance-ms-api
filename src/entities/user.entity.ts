@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import Audit from '../shared/interface/audit.entity';
 
-@Entity()
+@Entity({ name: 'users' })
 export class User extends Audit {
   @PrimaryGeneratedColumn()
   id: number;

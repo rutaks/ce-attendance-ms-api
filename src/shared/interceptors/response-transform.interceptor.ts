@@ -24,7 +24,7 @@ export class ResponseTransformInterceptor<T>
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const { url } = request;
-    if (url?.includes('download')) {
+    if (url?.includes('health')) {
       return next.handle();
     } else {
       return next.handle().pipe(
