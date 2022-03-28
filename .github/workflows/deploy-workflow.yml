@@ -20,6 +20,8 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            echo "Create `docker-compose` directory if non-existant"
+            mkdir -p docker-compose/
             echo "Deploy to production environment"
             curl \
             -H 'Authorization: token $GH_OAUTH_TOKEN' \
