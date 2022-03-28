@@ -14,12 +14,11 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           GH_OAUTH_TOKEN: ${{ secrets.GH_OAUTH_TOKEN }}
           GH_API_DOMAIN: ${{ secrets.GH_API_DOMAIN }}
-        uses: appleboy/ssh-action@0.1.4
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             echo "Deploy to production environment"
             curl \
