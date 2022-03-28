@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+  ce-ms-api:
+    # image: thomas-oliver/nestjs-dockerized
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - ce-ms-psqldb
+    container_name: ce-ms-api
+    environment:
+      - NODE_ENV= ${NODE_ENV}
+      - PORT=${APP_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    ports:
+      - '8080:5000'
+
+  ce-ms-psqldb:
+    image: postgres:14-alpine
+    container_name: ce-ms-psqldb
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ce-ms-psqldb:/var/lib/postgresql/data
+    ports:
+      - '5430:5432'
+
+volumes:
+  ce-ms-psqldb:
