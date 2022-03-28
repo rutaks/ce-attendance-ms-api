@@ -5,12 +5,39 @@ on:
 env:
   GH_OAUTH_TOKEN: ${{ secrets.GH_OAUTH_TOKEN }}
   GH_API_DOMAIN: ${{ secrets.GH_API_DOMAIN }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  ENV_VARS: ${{ secrets.DEV_ENV_VARS }}
+  APP_REGISTRY_NAME: rootsum/ce-ms-api
 
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub.
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ secrets.REPO_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
       - name: SSH and deploy node app
         uses: appleboy/ssh-action@master
         with:
@@ -20,9 +47,18 @@ jobs:
           script: |
             echo "Create `docker-compose` directory if non-existant"
             mkdir -p docker-compose/
-            echo "Deploy to production environment"
+            echo "Upload latest docker-compose file for dev env"
             curl \
             -H 'Authorization: token ${{env.GH_OAUTH_TOKEN}}' \
             -H 'Accept: application/vnd.github.v3.raw' \
             -O \
             -L 'https://${{env.GH_API_DOMAIN}}/repos/rutaks/ce-attendance-ms-api/contents/docker-compose/dev.docker-compose.yml?ref=dev' >> docker-compose/dev.docker-compose.yml
+            echo "Loading latest app image from docker registry"
+            mkdir -p dev-env
+            mv dev-env/dev.docker-compose.yml
+            cd dev-env
+            echo ${{env.ENV_VARS}} >> .env
+            docker login -u="${{env.DOCKER_USERNAME}}" -p="${{env.DOCKER_PASSWORD}}"
+            docker pull ${{env.APP_REGISTRY_NAME}}:dev
+            docker-compose -f dev.docker-compose.yml down -v
+            docker-compose --env-file .env -f dev.docker-compose.yml up -d
