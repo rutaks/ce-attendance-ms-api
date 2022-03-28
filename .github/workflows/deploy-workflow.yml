@@ -41,7 +41,7 @@ jobs:
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_PUBLIC_SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             echo "Deploy to production environment"
             curl \
