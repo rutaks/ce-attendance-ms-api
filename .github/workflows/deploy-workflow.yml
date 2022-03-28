@@ -2,6 +2,9 @@ on:
   push:
     branches:
       - dev
+env:
+  GH_OAUTH_TOKEN: ${{ secrets.GH_OAUTH_TOKEN }}
+  GH_API_DOMAIN: ${{ secrets.GH_API_DOMAIN }}
 
 jobs:
   push_to_registry:
@@ -9,11 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: SSH and deploy node app
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          GH_OAUTH_TOKEN: ${{ secrets.GH_OAUTH_TOKEN }}
-          GH_API_DOMAIN: ${{ secrets.GH_API_DOMAIN }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -24,7 +22,7 @@ jobs:
             mkdir -p docker-compose/
             echo "Deploy to production environment"
             curl \
-            -H 'Authorization: token $GH_OAUTH_TOKEN' \
+            -H 'Authorization: token ${{env.GH_OAUTH_TOKEN}}' \
             -H 'Accept: application/vnd.github.v3.raw' \
             -O \
-            -L 'https://$GH_API_DOMAIN/repos/rutaks/ce-attendance-ms-api/contents/docker-compose/dev.docker-compose.yml?ref=dev' >> docker-compose/dev.docker-compose.yml
+            -L 'https://${{env.GH_API_DOMAIN}}/repos/rutaks/ce-attendance-ms-api/contents/docker-compose/dev.docker-compose.yml?ref=dev' >> docker-compose/dev.docker-compose.yml
