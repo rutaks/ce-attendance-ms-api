@@ -30,3 +30,24 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Push to Digital Ocean
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          GH_OAUTH_TOKEN: ${{ secrets.GH_OAUTH_TOKEN }}
+          GH_API_DOMAIN: ${{ secrets.GH_API_DOMAIN }}
+        run: |
+          "which ssh-agent || (  apk update  && apk add openssh-client )"
+          "which rsync || ( apk update  && apk add rsync  )"
+          eval $(ssh-agent -s)
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          echo "Deploy to production environment"
+          curl \
+          -H 'Authorization: token $GH_OAUTH_TOKEN' \
+          -H 'Accept: application/vnd.github.v3.raw' \
+          -O \
+          -L 'https://$GH_API_DOMAIN/repos/rutaks/ce-attendance-ms-api/contents/docker-compose/dev.docker-compose.yml?ref=dev' >> docker-compose/dev.docker-compose.yml
