@@ -32,7 +32,7 @@ jobs:
             -L 'https://${{env.GH_API_DOMAIN}}/repos/rutaks/ce-attendance-ms-api/contents/docker-compose/dev.docker-compose.yml?ref=dev' >> docker-compose/dev.docker-compose.yml
             echo "Loading latest app image from docker registry"
             mkdir -p dev-env
-            mv ./docker-compose/dev.docker-compose.yml ./dev-env/dev.docker-compose.yml
+            cp ./docker-compose/dev.docker-compose.yml ./dev-env/dev.docker-compose.yml
             cd ./dev-env
             echo ${{env.ENV_VARS}} >> .env
             docker login -u="${{env.DOCKER_USERNAME}}" -p="${{env.DOCKER_PASSWORD}}"
