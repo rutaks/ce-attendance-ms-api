@@ -34,7 +34,7 @@ jobs:
             mkdir -p dev-env
             cp ./docker-compose/dev.docker-compose.yml ./dev-env/dev.docker-compose.yml
             cd ./dev-env
-            echo ${{env.ENV_VARS}} >> .env
+            echo ${{env.ENV_VARS}} > .env
             docker login -u="${{env.DOCKER_USERNAME}}" -p="${{env.DOCKER_PASSWORD}}"
             docker pull ${{env.APP_REGISTRY_NAME}}:dev
             docker-compose -f dev.docker-compose.yml down -v

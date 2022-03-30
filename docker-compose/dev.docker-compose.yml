@@ -2,9 +2,9 @@ version: '3.3'
 services:
   ce-ms-api:
     image: rootsum/ce-ms-api:dev
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     depends_on:
       - ce-ms-psqldb
     container_name: ce-ms-api
