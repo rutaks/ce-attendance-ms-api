@@ -30,6 +30,7 @@ jobs:
             -H 'Accept: application/vnd.github.v3.raw' \
             -O \
             -L 'https://${{env.GH_API_DOMAIN}}/repos/rutaks/ce-attendance-ms-api/contents/docker-compose/dev.docker-compose.yml?ref=dev' >> docker-compose/dev.docker-compose.yml
+            cat ./docker-compose/dev.docker-compose.yml
             echo "Loading latest app image from docker registry"
             mkdir -p dev-env
             cp ./docker-compose/dev.docker-compose.yml ./dev-env/dev.docker-compose.yml
