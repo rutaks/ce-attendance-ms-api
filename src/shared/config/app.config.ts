@@ -15,7 +15,6 @@ export const commonConfig = (): AppConfig => ({
 });
 
 export const runtimeConfig = (): AppConfig => ({
-  allowedOrigins: process.env.ALLOWED_ORIGINS.split(','),
   database: typeOrmConfig,
   ...commonConfig(),
 });
