@@ -24,16 +24,18 @@ jobs:
           script: |
             echo "Create `docker-compose` directory if non-existant"
             mkdir -p docker-compose/
+
             echo "Upload latest docker-compose file for dev env"
             curl --location --request GET 'https://api.github.com/repos/rutaks/ce-attendance-ms-api/contents/docker-compose/dev.docker-compose.yml?ref=dev' \
             --header 'Authorization: token ${{env.GH_OAUTH_TOKEN}}' \
             --header 'Accept: application/vnd.github.v3.raw' > ./docker-compose/dev.docker-compose.yml
-            cat ./docker-compose/dev.docker-compose.yml
+
             echo "Loading latest app image from docker registry"
             mkdir -p dev-env
             cp ./docker-compose/dev.docker-compose.yml ./dev-env/dev.docker-compose.yml
             cd ./dev-env
             echo ${{env.ENV_VARS}} > .env
+            echo ${{env.ENV_VARS}}
             docker login -u="${{env.DOCKER_USERNAME}}" -p="${{env.DOCKER_PASSWORD}}"
             docker pull ${{env.APP_REGISTRY_NAME}}:dev
             docker-compose -f dev.docker-compose.yml down -v
