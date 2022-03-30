@@ -40,6 +40,7 @@ jobs:
 
             echo "Docker Hub Pull Image"
             docker login -u="${{env.DOCKER_USERNAME}}" -p="${{env.DOCKER_PASSWORD}}"
+            docker image rm -f ${{env.APP_REGISTRY_NAME}}:dev
             docker pull ${{env.APP_REGISTRY_NAME}}:dev
 
             echo "Restart Image"
