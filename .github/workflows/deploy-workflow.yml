@@ -55,7 +55,7 @@ jobs:
 
             echo "Loading latest app image from docker registry"
             mkdir -p dev-env
-            cp ./docker-compose/dev.docker-compose.yml ./dev-env/dev.docker-compose.yml
+            cp ./docker-compose/dev.docker-compose.yml ./dev-env/docker-compose.yml
 
             echo "Setup Env. Vars."
             cd ./dev-env
@@ -63,9 +63,9 @@ jobs:
 
             echo "Docker Hub Pull Image"
             docker login -u="${{env.DOCKER_USERNAME}}" -p="${{env.DOCKER_PASSWORD}}"
-            docker image rm -f ${{env.APP_REGISTRY_NAME}}:dev
-            docker pull ${{env.APP_REGISTRY_NAME}}:dev
 
             echo "Restart Image"
-            docker-compose -f dev.docker-compose.yml down -v
-            docker-compose --env-file .env -f dev.docker-compose.yml up -d
+            docker-compose down -v
+            docker image rm -f ${{env.APP_REGISTRY_NAME}}:dev
+            docker pull ${{env.APP_REGISTRY_NAME}}:dev
+            docker-compose --env-file .env up -d

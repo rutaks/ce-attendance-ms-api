@@ -1,32 +1,46 @@
 version: '3.3'
 services:
   ce-ms-api:
-    # image: thomas-oliver/nestjs-dockerized
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: rootsum/ce-ms-api:dev
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     depends_on:
-      - ce-ms-psqldb
+      - ce-ms-postgres
     container_name: ce-ms-api
+    env_file: .env
     environment:
-      - NODE_ENV= ${NODE_ENV}
+      - NODE_ENV=${NODE_ENV}
       - PORT=${APP_PORT}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
+      - DB_PORT=5432
+      - DB_HOST=ce-ms-postgres
+      - TEST_DB_PORT=${TEST_DB_PORT}
+      - TEST_DB_HOST=${TEST_DB_HOST}
+      - TEST_DB_USERNAME=${TEST_DB_USERNAME}
+      - TEST_DB_PASSWORD=${TEST_DB_PASSWORD}
+      - TEST_DB_NAME=${TEST_DB_NAME}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
+      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
     ports:
       - '8080:5000'
 
-  ce-ms-psqldb:
+  ce-ms-postgres:
     image: postgres:14-alpine
-    container_name: ce-ms-psqldb
+    container_name: ce-ms-postgres
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=ce_attendance_ms_db
     volumes:
-      - ce-ms-psqldb:/var/lib/postgresql/data
+      - ce-ms-postgres:/var/lib/postgresql/data
     ports:
       - '5430:5432'
 
 volumes:
-  ce-ms-psqldb:
+  ce-ms-postgres:
