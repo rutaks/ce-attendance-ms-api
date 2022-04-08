@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ExtendedQueryBuilder } from 'typeorm-query-builder-extended';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { CreateMemberDto } from '../dtos/create-member.dto';
 import { Member } from '../entities/member.entity';
@@ -19,11 +20,12 @@ export class MemberService {
    * @returns Found Members
    */
   async getMembers(options: IPaginationOptions<any>, queryStr: string | any) {
-    delete queryStr['limit'];
-    delete queryStr['page'];
-    const queryBuilder = this.memberRepo.createQueryBuilder('member');
-    // const builder = new ExtendedQueryBuilder(queryBuilder, queryStr);
-    const { items, meta } = await paginate<Member>(queryBuilder, options);
+    const queryBuilder = this.memberRepo.createQueryBuilder('m');
+    const builder = new ExtendedQueryBuilder(queryBuilder, queryStr, [
+      'limit',
+      'page',
+    ]);
+    const { items, meta } = await paginate<Member>(builder.build(), options);
     return { data: items, meta };
   }
 
