@@ -12,7 +12,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   keepConnectionAlive: true,
   entities: ['dist/**/*.entity.js'],
   synchronize: !isRunningInProduction(),
-  dropSchema: !isRunningInProduction(),
+  dropSchema: isRunningInProduction(),
   logging: !isRunningInProduction(),
   autoLoadEntities: !isRunningInProduction(),
   migrationsTableName: 'migrations',

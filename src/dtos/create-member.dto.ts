@@ -3,26 +3,28 @@ import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
-  IsString,
 } from 'class-validator';
+import { Gender } from '../enums/gender.enum';
 
-export class CreateUserDto {
+export class CreateMemberDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsOptional()
+  @IsNotEmpty({ message: 'First name is not valid' })
   firstName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsOptional()
+  @IsNotEmpty({ message: 'Last name is not valid' })
   lastName: string;
 
   @ApiProperty()
-  @IsEmail({}, { message: 'Invalid email' })
-  email: string;
+  @IsOptional()
+  @IsEnum(Gender, { message: 'Gender is not valid' })
+  gender: Gender;
 
   @ApiProperty()
   @IsOptional()
@@ -37,4 +39,9 @@ export class CreateUserDto {
       'Phone number is invalid, must include area code & must not be empty',
   })
   phoneNumber: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsEmail({}, { message: 'Email is invalid' })
+  email: string;
 }
