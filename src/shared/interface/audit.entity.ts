@@ -3,15 +3,15 @@ import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 class Audit {
   @Exclude()
-  @Column({ default: false })
+  @Column({ name: 'is_deleted', default: false })
   isDeleted: boolean;
 
   @Column()
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_on' })
   createdOn: Date;
 
   @Column()
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'last_modified_on' })
   lastModifiedOn: Date;
 }
 
