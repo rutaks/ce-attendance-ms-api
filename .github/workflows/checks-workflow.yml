@@ -1,0 +1,23 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  code_analysis:
+    name: Push Docker image to Docker Hub.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+      - name: Run Linting
+        run: npm run lint
