@@ -13,13 +13,11 @@ import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 import { AuditInterceptor } from './shared/interceptors/audit.interceptor';
 import { ClassTransformInterceptor } from './shared/interceptors/class-transform.interceptor';
 import { ResponseTransformInterceptor } from './shared/interceptors/response-transform.interceptor';
-import { UserController } from './controllers/user.controller';
 import { HealthController } from './controllers/health.controller';
 import { MemberController } from './controllers/member.controller';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { MemberService } from './services/member.service';
-import { UserService } from './services/user.service';
 import { Member } from './entities/member.entity';
 import { Auth } from './entities/auth.entity';
 import { User } from './entities/user.entity';
@@ -41,7 +39,6 @@ import { AuthRole } from './entities/auth-role.entity';
   ],
   controllers: [
     AppController,
-    UserController,
     HealthController,
     AuthController,
     MemberController,
@@ -53,7 +50,6 @@ import { AuthRole } from './entities/auth-role.entity';
     { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ResponseTransformInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ClassTransformInterceptor },
-    UserService,
     AuthService,
     MemberService,
   ],
