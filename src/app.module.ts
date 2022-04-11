@@ -25,6 +25,9 @@ import { Auth } from './entities/auth.entity';
 import { User } from './entities/user.entity';
 import { AuthRole } from './entities/auth-role.entity';
 import { Event } from './entities/event.entity';
+import { EventAttendance } from './entities/event-attendance.entity';
+import { EventAttendanceService } from './services/event-attendance.service';
+import { EventAttendanceController } from './controllers/event-attendance.controller';
 
 @Module({
   imports: [
@@ -38,7 +41,14 @@ import { Event } from './entities/event.entity';
       imports: [ConfigModule],
       useClass: TypeOrmFactoryConfigService,
     }),
-    TypeOrmModule.forFeature([User, Member, Auth, AuthRole, Event]),
+    TypeOrmModule.forFeature([
+      User,
+      Member,
+      Auth,
+      AuthRole,
+      Event,
+      EventAttendance,
+    ]),
   ],
   controllers: [
     AppController,
@@ -46,6 +56,7 @@ import { Event } from './entities/event.entity';
     AuthController,
     MemberController,
     EventController,
+    EventAttendanceController,
   ],
   providers: [
     AppService,
@@ -57,6 +68,7 @@ import { Event } from './entities/event.entity';
     AuthService,
     MemberService,
     EventService,
+    EventAttendanceService,
   ],
 })
 export class AppModule {}

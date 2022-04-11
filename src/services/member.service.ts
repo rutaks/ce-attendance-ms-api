@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ExtendedQueryBuilder } from 'typeorm-query-builder-extended';
@@ -20,13 +20,17 @@ export class MemberService {
    * @returns Found Members
    */
   async getMembers(options: IPaginationOptions<any>, queryStr: string | any) {
-    const queryBuilder = this.memberRepo.createQueryBuilder('m');
-    const builder = new ExtendedQueryBuilder(queryBuilder, queryStr, [
-      'limit',
-      'page',
-    ]);
-    const { items, meta } = await paginate<Member>(builder.build(), options);
-    return { data: items, meta };
+    try {
+      const queryBuilder = this.memberRepo.createQueryBuilder('m');
+      const builder = new ExtendedQueryBuilder(queryBuilder, queryStr, [
+        'limit',
+        'page',
+      ]);
+      const { items, meta } = await paginate<Member>(builder.build(), options);
+      return { data: items, meta };
+    } catch (error) {
+      throw new BadRequestException(error?.message);
+    }
   }
 
   /**
