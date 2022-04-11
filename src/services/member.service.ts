@@ -36,7 +36,7 @@ export class MemberService {
    */
   async createMember(dto: CreateMemberDto): Promise<Member> {
     const slug = generateSlug(`${dto?.firstName} ${dto.lastName}`);
-    return await this.memberRepo.save({ ...new Member(), ...dto, slug });
+    return this.memberRepo.save({ ...new Member(), ...dto, slug });
   }
 
   /**
@@ -47,7 +47,7 @@ export class MemberService {
    */
   async modifyMember(uuid: string, dto: CreateMemberDto): Promise<Member> {
     const member = await this.findMemberByUuid(uuid);
-    return await this.memberRepo.save({ ...member, ...dto });
+    return this.memberRepo.save({ ...member, ...dto });
   }
 
   /**

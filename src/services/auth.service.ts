@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { RegisterMemberWithAccountDto } from '../dtos/register-member-with-account.dto';
 import { AuthRole } from '../entities/auth-role.entity';
 import { Auth } from '../entities/auth.entity';
 import { Member } from '../entities/member.entity';
@@ -11,6 +10,7 @@ import { generateRandomPassword } from '../shared/util/string.util';
 import { RolesRequestDto } from '../dtos/roles-request';
 import { MemberService } from './member.service';
 import { RolesAssignmentDto } from '../dtos/roles-assignment-response.dto';
+import { AccountCreationResponse } from '../dtos/account-creation-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,47 +24,12 @@ export class AuthService {
   ) {}
 
   /**
-   * Creates a user and assigns a role to the user
-   * @param dto request dto
-   * @returns Created user
-   */
-  async createNewMemberAndAccount(
-    dto: RegisterMemberWithAccountDto,
-  ): Promise<{ generatedPassword }> {
-    return await this.connection.transaction(async (manager) => {
-      const generatedPassword = generateRandomPassword().toString();
-      //   Create member
-      const member: Member = await manager.save(Member, {
-        ...new Member(),
-        ...dto?.userDetails,
-      });
-      //   Create Member's account
-      const auth: Auth = await manager.save(Auth, {
-        ...new Auth(),
-        username: dto?.userDetails?.email,
-        password: await bcrypt.hash(generateRandomPassword().toString(), 10),
-        user: member,
-      });
-      //   Assign member's role to account
-      await manager.save(AuthRole, {
-        ...new AuthRole(),
-        role: dto.role,
-        auth,
-      });
-
-      return { generatedPassword };
-    });
-  }
-
-  /**
    * Create account for existing member
    * @param dto user's details
    * @returns created user
    */
-  async createAccount(
-    userUuid: string,
-  ): Promise<{ generatedPassword: string }> {
-    return await this.connection.transaction(async (manager) => {
+  async createAccount(userUuid: string): Promise<AccountCreationResponse> {
+    return this.connection.transaction(async (manager) => {
       const generatedPassword = generateRandomPassword().toString();
       //   Create member
       const member: Member = await this.memberService.findMemberByUuid(
@@ -186,11 +151,9 @@ export class AuthService {
   async findAuthRolesByUserUuid(userUuid: string): Promise<AuthRole[]> {
     const auth = await this.findAuthByUserUuid(userUuid);
 
-    const authRoles = await this.authRoleRepo.find({
+    return this.authRoleRepo.find({
       where: { auth: { id: auth?.id } },
       relations: ['auth'],
     });
-
-    return authRoles;
   }
 }

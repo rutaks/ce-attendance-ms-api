@@ -6,7 +6,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { isArray } from 'util';
 
 @Catch(HttpException)
 export class HttpExceptionFilter<T extends HttpException>
@@ -34,7 +33,7 @@ export class HttpExceptionFilter<T extends HttpException>
   }
 
   formatError(error: string | Record<string, unknown> | any): any {
-    if (error.message && !isArray(error.message)) {
+    if (error.message && !Array.isArray(error.message)) {
       error.message = [error.message];
     }
     return error;

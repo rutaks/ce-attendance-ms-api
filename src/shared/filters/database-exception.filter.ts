@@ -44,12 +44,11 @@ export class DatabaseExceptionFilter<T extends TypeOrmException>
     message: string,
     detail?: string,
   ): string | string[] {
-    switch (code) {
-      case PostgresErrorCode.UniqueViolation:
-        const msg = this.getConstraintKeyMessage(detail);
-        return [msg];
-      default:
-        return message;
+    if (code === PostgresErrorCode.UniqueViolation) {
+      const msg = this.getConstraintKeyMessage(detail);
+      return [msg];
+    } else {
+      return message;
     }
   }
 
