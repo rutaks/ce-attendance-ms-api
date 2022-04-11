@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { RegisterMemberWithAccountDto } from '../dtos/register-member-with-account.dto';
 import { AuthRole } from '../entities/auth-role.entity';
 import { Auth } from '../entities/auth.entity';
 import { Member } from '../entities/member.entity';
@@ -23,39 +22,6 @@ export class AuthService {
     private authRoleRepo: Repository<AuthRole>,
     private memberService: MemberService,
   ) {}
-
-  /**
-   * Creates a user and assigns a role to the user
-   * @param dto request dto
-   * @returns Created user
-   */
-  async createNewMemberAndAccount(
-    dto: RegisterMemberWithAccountDto,
-  ): Promise<AccountCreationResponse> {
-    return this.connection.transaction(async (manager) => {
-      const generatedPassword = generateRandomPassword().toString();
-      //   Create member
-      const member: Member = await manager.save(Member, {
-        ...new Member(),
-        ...dto?.userDetails,
-      });
-      //   Create Member's account
-      const auth: Auth = await manager.save(Auth, {
-        ...new Auth(),
-        username: dto?.userDetails?.email,
-        password: await bcrypt.hash(generateRandomPassword().toString(), 10),
-        user: member,
-      });
-      //   Assign member's role to account
-      await manager.save(AuthRole, {
-        ...new AuthRole(),
-        role: dto.role,
-        auth,
-      });
-
-      return { generatedPassword };
-    });
-  }
 
   /**
    * Create account for existing member
