@@ -8,7 +8,7 @@ on:
 
 jobs:
   code_analysis:
-    name: Push Docker image to Docker Hub.
+    name: Code Analysis Check.
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -17,7 +17,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install yarn
+        run: npm install -g yarn
       - name: Install dependencies
-        run: npm install
+        run: yarn
       - name: Run Linting
-        run: npm run lint
+        run: yarn lint
