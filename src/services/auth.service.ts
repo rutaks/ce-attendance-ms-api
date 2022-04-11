@@ -11,6 +11,7 @@ import { generateRandomPassword } from '../shared/util/string.util';
 import { RolesRequestDto } from '../dtos/roles-request';
 import { MemberService } from './member.service';
 import { RolesAssignmentDto } from '../dtos/roles-assignment-response.dto';
+import { AccountCreationResponse } from '../dtos/account-creation-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -30,8 +31,8 @@ export class AuthService {
    */
   async createNewMemberAndAccount(
     dto: RegisterMemberWithAccountDto,
-  ): Promise<{ generatedPassword }> {
-    return await this.connection.transaction(async (manager) => {
+  ): Promise<AccountCreationResponse> {
+    return this.connection.transaction(async (manager) => {
       const generatedPassword = generateRandomPassword().toString();
       //   Create member
       const member: Member = await manager.save(Member, {
@@ -61,10 +62,8 @@ export class AuthService {
    * @param dto user's details
    * @returns created user
    */
-  async createAccount(
-    userUuid: string,
-  ): Promise<{ generatedPassword: string }> {
-    return await this.connection.transaction(async (manager) => {
+  async createAccount(userUuid: string): Promise<AccountCreationResponse> {
+    return this.connection.transaction(async (manager) => {
       const generatedPassword = generateRandomPassword().toString();
       //   Create member
       const member: Member = await this.memberService.findMemberByUuid(
@@ -186,11 +185,9 @@ export class AuthService {
   async findAuthRolesByUserUuid(userUuid: string): Promise<AuthRole[]> {
     const auth = await this.findAuthByUserUuid(userUuid);
 
-    const authRoles = await this.authRoleRepo.find({
+    return this.authRoleRepo.find({
       where: { auth: { id: auth?.id } },
       relations: ['auth'],
     });
-
-    return authRoles;
   }
 }

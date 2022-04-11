@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   HttpCode,
   HttpStatus,
@@ -10,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AccountCreationResponse } from '../dtos/account-creation-response.dto';
-import { RolesRequestDto } from '../dtos/roles-request';
 import { AuthService } from '../services/auth.service';
 import { GenericResponse } from '../shared/interface/generic-response.interface';
 import { getArraySchema } from '../shared/util/swagger.util';

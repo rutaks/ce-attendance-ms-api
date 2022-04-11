@@ -14,12 +14,12 @@ export class UserService {
 
   async create(userDto: CreateUserDto) {
     const slug = generateSlug(`${userDto?.firstName} ${userDto.lastName}`);
-    return await this.userRepo.save({ ...new User(), ...userDto, slug });
+    return this.userRepo.save({ ...new User(), ...userDto, slug });
   }
   //   modify() {}
 
   async findOneBySlug(slug: string) {
-    return await this.userRepo.findOne({ where: { slug } });
+    return this.userRepo.findOne({ where: { slug } });
   }
 
   // findMany() {}
