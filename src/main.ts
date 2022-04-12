@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import 'source-map-support/register';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
