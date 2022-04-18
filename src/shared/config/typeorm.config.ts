@@ -13,7 +13,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   entities: ['dist/**/*.entity.js'],
   synchronize: !isRunningInProduction(),
   dropSchema: isRunningInProduction(),
-  logging: !isRunningInProduction(),
+  logging: isRunningInProduction(),
   autoLoadEntities: !isRunningInProduction(),
   migrationsTableName: 'migrations',
   migrations: ['dist/src/migrations/*{.ts,.js}'],

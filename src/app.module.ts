@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TerminusModule } from '@nestjs/terminus';
+import { WinstonModule } from 'nest-winston';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { runtimeConfig } from './shared/config/app.config';
+import { getLoggerConfig, runtimeConfig } from './shared/config/app.config';
 import { TypeOrmFactoryConfigService } from './shared/config/typeorm-factory-config.service';
 import { DatabaseExceptionFilter } from './shared/filters/database-exception.filter';
 import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
@@ -29,35 +30,33 @@ import { EventAttendance } from './entities/event-attendance.entity';
 import { EventAttendanceService } from './services/event-attendance.service';
 import { EventAttendanceController } from './controllers/event-attendance.controller';
 
+const controllers = [
+  AppController,
+  HealthController,
+  AuthController,
+  MemberController,
+  EventController,
+  EventAttendanceController,
+];
+
+const entities = [User, Member, Auth, AuthRole, Event, EventAttendance];
+
 @Module({
   imports: [
     HttpModule,
     TerminusModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [runtimeConfig],
+    TypeOrmModule.forFeature(entities),
+    ConfigModule.forRoot({ isGlobal: true, load: [runtimeConfig] }),
+    WinstonModule.forRootAsync({
+      useFactory: getLoggerConfig,
+      inject: [ConfigService],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useClass: TypeOrmFactoryConfigService,
     }),
-    TypeOrmModule.forFeature([
-      User,
-      Member,
-      Auth,
-      AuthRole,
-      Event,
-      EventAttendance,
-    ]),
   ],
-  controllers: [
-    AppController,
-    HealthController,
-    AuthController,
-    MemberController,
-    EventController,
-    EventAttendanceController,
-  ],
+  controllers,
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: HttpExceptionFilter },
