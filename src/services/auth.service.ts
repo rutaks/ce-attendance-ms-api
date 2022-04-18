@@ -29,7 +29,7 @@ export class AuthService {
    * @returns created user
    */
   async createAccount(userUuid: string): Promise<AccountCreationResponse> {
-    return this.connection.transaction(async (manager) => {
+    return await this.connection.transaction(async (manager) => {
       const generatedPassword = generateRandomPassword().toString();
       //   Create member
       const member: Member = await this.memberService.findMemberByUuid(

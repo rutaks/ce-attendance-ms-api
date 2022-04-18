@@ -26,10 +26,7 @@ export class AuthController {
   async createAccount(
     @Param('uuid') userUuid: string,
   ): Promise<GenericResponse<AccountCreationResponse>> {
-    console.log('userUuid', userUuid);
-
     const results = await this.authService.createAccount(userUuid);
-
     return { results, message: '' };
   }
 }

@@ -1,8 +1,11 @@
+import * as winston from 'winston';
 import { INestApplication } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import AppConfig from '../interface/app-config.interface';
 import typeOrmConfig from './typeorm.config';
+import { isRunningInProduction } from '../util/env.util';
 
 export const commonConfig = (): AppConfig => ({
   port: parseInt(process.env.PORT),
@@ -73,3 +76,33 @@ export function corsConfig(): CorsOptions {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   };
 }
+
+export const getLoggerConfig = () => {
+  const LOG_FILE = 'app.stream.log';
+
+  let transportLoggerConfig: any[] = [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        nestWinstonModuleUtilities.format.nestLike(),
+      ),
+    }),
+  ];
+
+  if (!isRunningInProduction()) {
+    transportLoggerConfig = [
+      ...transportLoggerConfig,
+      new winston.transports.File({
+        filename: `${process.cwd()}/${LOG_FILE}`,
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.json(),
+        ),
+      }),
+    ];
+  }
+
+  return {
+    transports: transportLoggerConfig,
+  };
+};

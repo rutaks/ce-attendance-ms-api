@@ -3,8 +3,10 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
-  Logger,
+  Inject,
 } from '@nestjs/common';
+import { Logger } from 'winston';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -17,20 +19,24 @@ import { tap } from 'rxjs/operators';
  */
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
+  constructor(
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+  ) {}
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const { method, url } = request;
     const now = Date.now();
-    Logger.log(
+    this.logger.info(
       `User is attempting to make a request to: ${url} ${method}`,
-      context.getClass().name,
+      { context: context.getClass().name },
     );
     return next.handle().pipe(
       tap(() => {
         const duration = Date.now() - now;
-        Logger.log(
+        this.logger.info(
           `User successfully made a request to:${url} ${method} ${duration}ms`,
-          context.getClass().name,
+          { context: context.getClass().name },
         );
       }),
     );
