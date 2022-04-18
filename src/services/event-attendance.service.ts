@@ -64,8 +64,6 @@ export class EventAttendanceService {
       options,
     );
 
-    console.log('items', items);
-
     const mappedAttendance: AttendanceMemberListDto[] = items.map((i) => ({
       member: i.member,
       attendedOn: i.createdOn,

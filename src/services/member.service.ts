@@ -70,8 +70,6 @@ export class MemberService {
    */
   async findMemberByUuid(uuid: string): Promise<Member> {
     const member = await this.memberRepo.findOne({ where: { uuid } });
-    console.log('member', member);
-
     if (!member) {
       throw new NotFoundException('');
     }
