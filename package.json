@@ -50,7 +50,7 @@
     "express-rate-limit": "^6.2.0",
     "helmet": "^5.0.2",
     "lodash": "^4.17.21",
-    "nanoid": "^3.3.1",
+    "nanoid": "^3.3.3",
     "nest-winston": "^1.6.2",
     "nestjs-typeorm-paginate": "^3.2.0-alpha",
     "passport": "^0.5.2",
