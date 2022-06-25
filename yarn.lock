@@ -5139,10 +5139,10 @@ nest-winston@^1.6.2:
     cli-color "^2.0.1"
     fast-safe-stringify "^2.1.1"
 
-nestjs-typeorm-paginate@^3.2.0-alpha:
-  version "3.2.0-alpha"
-  resolved "https://registry.yarnpkg.com/nestjs-typeorm-paginate/-/nestjs-typeorm-paginate-3.2.0-alpha.tgz#709230a72ab1e97234004c91be309c3ca521d3dc"
-  integrity sha512-AiGT0SvYS7QmITouga8YEK8EKne1uTfDg1pBo2D3m0kFOTPynwf0FYiGaeDd3x7K6T8NPF2c6l4WyHRoVAgb8Q==
+nestjs-typeorm-paginate@^3.2.0:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/nestjs-typeorm-paginate/-/nestjs-typeorm-paginate-3.2.1.tgz#448aa22bb690d086043db3d7ca2b0441d0c81f42"
+  integrity sha512-AwmGQ4nncmVzK/T0Woaa/GOeUIAqUx63I+oz5moUe1ax8JWJfkF4iaZ32reiE72KOFhIMKqe8rL7MjJiz+Ed9A==
 
 next-tick@1, next-tick@^1.1.0:
   version "1.1.0"
