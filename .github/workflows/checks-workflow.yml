@@ -17,6 +17,41 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Set up secret file
+        env:
+          GH_OAUTH_TOKEN: ${{ secrets.GH_OAUTH_TOKEN }}
+          GH_API_DOMAIN: ${{ secrets.GH_API_DOMAIN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DEV_ENV_VARS: ${{ secrets.DEV_ENV_VARS }}
+          REPO_NAME: ${{ secrets.REPO_NAME }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
+          DIGITAL_OCEAN_ACCESS_TOKEN: ${{ secrets.DIGITAL_OCEAN_ACCESS_TOKEN }}
+          DIGITAL_OCEAN_HOST: ${{ secrets.DIGITAL_OCEAN_HOST }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SERVER_PUBLIC_SSH_KEY: ${{ secrets.SERVER_PUBLIC_SSH_KEY }}
+        run: |
+          echo $GH_OAUTH_TOKEN >> secrets.txt
+          echo $GH_API_DOMAIN >> secrets.txt
+          echo $DOCKER_USERNAME >> secrets.txt
+          echo $DOCKER_PASSWORD >> secrets.txt
+          echo $DEV_ENV_VARS >> secrets.txt
+          echo $REPO_NAME >> secrets.txt
+          echo $SERVER_IP >> secrets.txt
+          echo $SERVER_USERNAME >> secrets.txt
+          echo $DIGITAL_OCEAN_ACCESS_TOKEN >> secrets.txt
+          echo $DIGITAL_OCEAN_HOST >> secrets.txt
+          echo $SSH_KEY >> secrets.txt
+          echo $SSH_PASSPHRASE >> secrets.txt
+          echo $SSH_USERNAME >> secrets.txt
+          echo $SERVER_PUBLIC_SSH_KEY >> secrets.txt
+
+      - name: Run tmate
+        uses: mxschmitt/action-tmate@v2
+
       - name: Install yarn
         run: npm install -g yarn
       - name: Install dependencies
